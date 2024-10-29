@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt  # Asegúrate de que se instala desde requirements.txt
+          pip install -r fastapi/requirements.txt  # Modificado para apuntar a fastapi/requirements.txt
 
       - name: Lint with flake8
         run: |
