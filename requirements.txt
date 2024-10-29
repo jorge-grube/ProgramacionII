@@ -10,3 +10,4 @@ sqlalchemy-utils
 uvicorn==0.17.6
 python-dotenv
 faker
+requests
