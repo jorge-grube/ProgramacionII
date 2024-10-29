@@ -1,7 +1,4 @@
+fastapi==0.78.0
 pydantic[email]==1.10.4
-fastapi
-pandas
-sqlalchemy
-pytest
-flake8
-httpx
+sqlalchemy==2.0.0
+email-validator==1.2.1
