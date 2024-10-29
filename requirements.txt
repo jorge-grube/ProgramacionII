@@ -5,3 +5,8 @@ sqlalchemy
 pytest
 flake8
 httpx
+alembic
+sqlalchemy-utils
+uvicorn
+python-dotenv
+faker
