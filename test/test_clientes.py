@@ -1,5 +1,5 @@
 from fastapi.testclient import TestClient
-from fastapi.server import app  # Si server.py está en la carpeta fastapi
+from app.server import app  # Cambiado para reflejar la nueva ruta
 import pytest
 
 client = TestClient(app)
