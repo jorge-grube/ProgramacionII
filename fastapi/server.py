@@ -1,10 +1,10 @@
-import shutil
-import io
 import pandas as pd
 from typing import List
-from fastapi import FastAPI, File, UploadFile, Form
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI
 from pydantic import BaseModel as PydanticBaseModel
+
+# Router del módulo clientes (dueños)
+from clientes.routers import router as duenos_router
 
 # Clases existentes de ejemplo para la funcionalidad de contratos
 class BaseModel(PydanticBaseModel):
@@ -39,7 +39,10 @@ app = FastAPI(
     version="0.2.0",
 )
 
-# Endpoint para recuperar datos de contratos (funcionalidad existente)
+# Router de dueños con el prefijo "/clientes"
+app.include_router(duenos_router, prefix="/clientes")
+
+# Endpoint para recuperar datos de contratos
 @app.get("/retrieve_data/")
 def retrieve_data():
     todosmisdatos = pd.read_csv('./contratos_inscritos_simplificado_2023.csv', sep=';')
@@ -49,7 +52,7 @@ def retrieve_data():
     listado.contratos = todosmisdatosdict
     return listado
 
-# Endpoint para envío de formularios (funcionalidad existente)
+# Endpoint para envío de formularios
 class FormData(BaseModel):
     date: str
     description: str
