@@ -6,6 +6,11 @@ from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel as PydanticBaseModel
 
+# Importación de los routers de cada módulo
+from veterinaria.clientes.endpoints import router as clientes_router
+from veterinaria.animales.endpoints import router as animales_router
+from veterinaria.productos.endpoints import router as productos_router
+
 # Clases existentes de ejemplo para la funcionalidad de contratos
 class BaseModel(PydanticBaseModel):
     class Config:
@@ -35,9 +40,14 @@ class ListadoContratos(BaseModel):
 # Instancia principal de la aplicación FastAPI
 app = FastAPI(
     title="Gestión de Clínica Veterinaria",
-    description="""API para la gestión de datos de la clínica veterinaria y otras funcionalidades.""",
+    description="API para la gestión de datos de la clínica veterinaria y otras funcionalidades.",
     version="0.2.0",
 )
+
+# Registro de los routers para cada módulo
+app.include_router(clientes_router, prefix="/api/clientes")
+app.include_router(animales_router, prefix="/api/animales")
+app.include_router(productos_router, prefix="/api/productos")
 
 # Endpoint para recuperar datos de contratos (funcionalidad existente)
 @app.get("/retrieve_data/")
