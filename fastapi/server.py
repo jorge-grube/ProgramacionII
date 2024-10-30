@@ -8,8 +8,6 @@ from pydantic import BaseModel as PydanticBaseModel
 
 # Importación de los routers de cada módulo
 from veterinaria.clientes.endpoints import router as clientes_router
-from veterinaria.animales.endpoints import router as animales_router
-from veterinaria.productos.endpoints import router as productos_router
 
 # Clases existentes de ejemplo para la funcionalidad de contratos
 class BaseModel(PydanticBaseModel):
@@ -46,8 +44,6 @@ app = FastAPI(
 
 # Registro de los routers para cada módulo
 app.include_router(clientes_router, prefix="/api/clientes")
-app.include_router(animales_router, prefix="/api/animales")
-app.include_router(productos_router, prefix="/api/productos")
 
 # Endpoint para recuperar datos de contratos (funcionalidad existente)
 @app.get("/retrieve_data/")
