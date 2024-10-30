@@ -1,61 +1,36 @@
-import shutil
-import io
-import pandas as pd
-from typing import List
-from fastapi import FastAPI, File, UploadFile, Form
-from fastapi.responses import JSONResponse
-from pydantic import BaseModel as PydanticBaseModel
+from fastapi import FastAPI, Depends, HTTPException
+from sqlalchemy.orm import Session
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from veterinaria.clientes.models import Dueño, Base
+from veterinaria.clientes.schema import DueñoCreate
 
-# Clases existentes de ejemplo para la funcionalidad de contratos
-class BaseModel(PydanticBaseModel):
-    class Config:
-        arbitrary_types_allowed = True
+DATABASE_URL = "sqlite:///./recetas.db"  # Ajusta esta URL si es necesario
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-class Contrato(BaseModel):
-    fecha: str
-    centro_seccion: str
-    nreg: str
-    nexp: str
-    objeto: str
-    tipo: str
-    procedimiento: str
-    numlicit: str
-    numinvitcurs: str
-    proc_adjud: str
-    presupuesto_con_iva: str
-    valor_estimado: str
-    importe_adj_con_iva: str
-    adjuducatario: str
-    fecha_formalizacion: str
-    I_G: str
+# Crear las tablas en la base de datos si aún no existen
+Base.metadata.create_all(bind=engine)
 
-class ListadoContratos(BaseModel):
-    contratos = List[Contrato]
+app = FastAPI()
 
-# Instancia principal de la aplicación FastAPI
-app = FastAPI(
-    title="Gestión de Clínica Veterinaria",
-    description="""API para la gestión de datos de la clínica veterinaria y otras funcionalidades.""",
-    version="0.2.0",
-)
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
-# Endpoint para recuperar datos de contratos (funcionalidad existente)
-@app.get("/retrieve_data/")
-def retrieve_data():
-    todosmisdatos = pd.read_csv('./contratos_inscritos_simplificado_2023.csv', sep=';')
-    todosmisdatos = todosmisdatos.fillna(0)
-    todosmisdatosdict = todosmisdatos.to_dict(orient='records')
-    listado = ListadoContratos()
-    listado.contratos = todosmisdatosdict
-    return listado
-
-# Endpoint para envío de formularios (funcionalidad existente)
-class FormData(BaseModel):
-    date: str
-    description: str
-    option: str
-    amount: float
-
-@app.post("/envio/")
-async def submit_form(data: FormData):
-    return {"message": "Formulario recibido", "data": data}
+@app.post("/alta_dueño/")
+async def alta_dueño(dueño: DueñoCreate, db: Session = Depends(get_db)):
+    db_dueño = Dueño(
+        nombre=dueño.nombre,
+        dni=dueño.dni,
+        direccion=dueño.direccion,
+        telefono=dueño.telefono,
+        correo_electronico=dueño.correo_electronico
+    )
+    db.add(db_dueño)
+    db.commit()
+    db.refresh(db_dueño)
+    return db_dueño
