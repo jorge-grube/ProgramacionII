@@ -14,7 +14,7 @@ WORKDIR /fastapi
 RUN pip install -r requirements.txt
 
 # Copiar el código completo
-COPY . /fastapi  # Esto incluye la carpeta `veterinaria`
+COPY . /fastapi 
 
 # Exponer el puerto de FastAPI
 EXPOSE 8000
