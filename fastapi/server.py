@@ -5,6 +5,8 @@ from typing import List
 from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel as PydanticBaseModel
+from clientes_endpoints import router as clientes_router
+
 
 # Clases existentes de ejemplo para la funcionalidad de contratos
 class BaseModel(PydanticBaseModel):
@@ -59,3 +61,5 @@ class FormData(BaseModel):
 @app.post("/envio/")
 async def submit_form(data: FormData):
     return {"message": "Formulario recibido", "data": data}
+
+app.include_router(clientes_router, prefix="/api")
