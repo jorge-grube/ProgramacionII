@@ -1,28 +1,22 @@
-from data.recetas import  *
-from sqlalchemy import *
+from veterinaria.clientes.models import Dueño, Base
+from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
-from sqlalchemy.ext.automap import automap_base
 import logging
-
 
 if __name__ == '__main__':
     try:
         dbname = 'recetas.db'
-        engine = create_engine('sqlite:///' + dbname,echo=True)
+        engine = create_engine('sqlite:///' + dbname, echo=True)
+        Base.metadata.create_all(bind=engine)
         with Session(engine) as session:
-
-            receta = Receta( nombre='pollo al chilindron')
-            ingrediente1 = Ingrediente( nombre='chilindron')
-            rel1 = RecetaIngrediente(IDINGREDIENTE=4, IDRECETA=2, CANTIDAD=1)
-            rel2 = RecetaIngrediente(IDINGREDIENTE=6, IDRECETA=2, CANTIDAD=2)
-
-            session.add_all([receta,  ingrediente1, rel1, rel2])
+            # Ejemplo de inserción
+            nuevo_dueño = Dueño(nombre="Carlos García", dni="87654321X", direccion="Calle Real 45", telefono="555432123", correo_electronico="carlos.garcia@example.com")
+            session.add(nuevo_dueño)
             session.commit()
 
-            logging.info("success calling db func: " + func.__name__)
+            logging.info("Alta de dueño exitosa")
     except Exception as e:
         logging.error(e.args)
         session.rollback()
     finally:
         session.close()
-
