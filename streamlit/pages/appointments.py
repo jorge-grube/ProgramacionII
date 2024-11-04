@@ -5,6 +5,10 @@ import pandas as pd
 # Configuración del endpoint de la API
 API_URL = "http://localhost:8000/api/v1/appointments"
 
+# Título de la página
+st.title("Alta de Citas - Clínica Veterinaria")
+
+
 # Función para obtener todas las citas
 def get_appointments():
     try:
